@@ -18,7 +18,7 @@ module.exports = {
     output: {
         path: __dirname + '/dist',
         publicPath: "/",
-        filename: "[name].[hash:8].js"
+        filename: "js/[name].[hash:8].js"
     },
     resolve: {
         extensions: ['.js', '.es6.js' , '.jsx' , '.json']
@@ -29,7 +29,10 @@ module.exports = {
             minify: true,
             hash: false
         }),
-        //new ExtractTextPlugin('css/[name].[hash].css'),
+        //new ExtractTextPlugin({
+        //    filename: '[name].css',
+        //    ignoreOrder: true
+        //}),
         new webpack.HotModuleReplacementPlugin() // 热加载插件
     ],
     module:{
@@ -44,7 +47,15 @@ module.exports = {
                 ]
             },
             {
+                exclude: [/\.(js|jsx|mjs)$/, /\.html$/, /\.json$/, /\.styl$/],
+                loader: 'file-loader',
+                options: {
+                    name: 'css/[name].[hash:8].[ext]',
+                },
+            },
+            {
                 test: /\.css$/,
+                exclude: /node_modules/,
                 use: ExtractTextPlugin.extract({
                     fallback: 'style-loader',
                     use: ["css-loader", "postcss-loader"]
@@ -52,35 +63,26 @@ module.exports = {
             },
             {
                 test: /\.styl$/,
-                use: ExtractTextPlugin.extract({
-                    fallback: "style-loader",
-                    use: [
-                        {
-                            loader: 'css-loader',
-                            options: {
-                                sourceMap: true,
-                                modules: true,
-                                localIdentName: '[local].[hash:base64:5]'}
-                        },
-                        {
-                            loader: "postcss-loader"
-                        },
-                        {
-                            loader: 'stylus-loader'
-                        }
-                    ]
-                })
+                loaders: ['style-loader', 'css-loader', 'stylus-loader']
             },
-            {
-                test: /\.(woff|woff2|eot|ttf|otf)$/,
-                use: [{
-                    loader:'url-loader',
-                    options:{
-                        limit: 100000,
-                        name:'fonts/[name]-[hash:6].[ext]',
-                    }
-                }]
-            },
+            //{
+            //    test: /\.styl$/,
+            //    exclude: /node_modules/,
+            //    use: ExtractTextPlugin.extract({
+            //        fallback: "style-loader",
+            //        use: [
+            //            {
+            //                loader: 'css-loader',
+            //            },
+            //            {
+            //                loader: "postcss-loader"
+            //            },
+            //            {
+            //                loader: 'stylus-loader'
+            //            }
+            //        ]
+            //    })
+            //},
             {
                 test: /\.(png|jpg|jpeg|gif|webp|svg)$/,
                 use: [{
