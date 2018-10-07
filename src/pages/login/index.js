@@ -6,6 +6,7 @@ import {withRouter} from 'react-router-dom';
 import Immutable from 'immutable';
 import { connect } from 'react-redux';
 import {Layout} from 'antd';
+import * as hormone from 'hormone.js';
 
 const { Header, Footer, Sider, Content } = Layout;
 
@@ -19,7 +20,9 @@ class Login extends Component<Props>{
         };
     }
     componentDidMount(){
+        let strToArr = hormone.strIntoArr('lisong',',');
 
+        console.log('login componentDidMount', strToArr);
     }
     componentWillReceiveProps(nextProps){
         console.log('login', nextProps);
